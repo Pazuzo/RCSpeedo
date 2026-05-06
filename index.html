@@ -2,398 +2,448 @@
 <html lang="bg">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>RC Speedometer</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-
-body{
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background:#010105;
-    color:#d9faff;
-    overflow-x:hidden;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* КИБЕР ГРИД */
-body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    background:
-        linear-gradient(rgba(0,229,255,0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,229,255,0.06) 1px, transparent 1px);
-    background-size:48px 48px;
-    z-index:-2;
+body {
+    background: #000;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
 
-.container{max-width:1200px;margin:0 auto;padding:1.5rem}
-
-/* HERO */
-.hero{
-    text-align:center;
-    padding:1rem 1rem 0rem;
+/* ТЕЛЕФОН */
+.phone {
+    width: 300px;
+    height: 600px;
+    border-radius: 36px;
+    background: #05060c;
+    border: 1px solid #00e5ff22;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    box-shadow: 0 0 0 3px #111, 0 0 0 5px #1a1a1a;
 }
 
-.hero h1{
-    font-size:clamp(2rem, 7vw, 3.2rem);
-    font-weight:900;
-    letter-spacing:-1px;
-    background:linear-gradient(135deg, #00e5ff, #a020f0);
-    -webkit-background-clip:text;
-    background-clip:text;
-    color:transparent;
-    text-shadow:0 0 20px #0af2;
+/* ГОРНА ЛЕНТА */
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
 }
 
-.hero p{
-    margin-top:0.2rem;
-    color:#8aa;
-    font-size:clamp(0.75rem, 4vw, 0.9rem);
+/* ЛЕНТИ ЗА САТЕЛИТИ */
+.bars {
+    display: flex;
+    gap: 3px;
+    align-items: flex-end;
+}
+.bars span {
+    width: 5px;
+    border-radius: 2px;
+    background: #00e5ff;
+    transition: all 0.2s;
 }
 
-/* MOCKUP ТЕЛЕФОН */
-.mockup{
-    margin:1.2rem auto 0;
-    width:min(80%, 280px);
-    max-width:280px;
-    aspect-ratio: 9 / 18;
-    border-radius:2rem;
-    background:#03050b;
-    border:1px solid #0af3;
-    position:relative;
-    overflow:hidden;
-    box-shadow:0 0 30px #0af2, inset 0 0 15px #0af1;
+/* REC БУТОН */
+.rec {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid #00e5ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+    color: #00e5ff;
+    background: transparent;
+    transition: 0.2s;
+}
+.rec.recording {
+    background: #ff3d00;
+    border-color: #ff3d00;
+    color: white;
+    animation: recPulse 0.8s infinite alternate;
+}
+@keyframes recPulse {
+    0% { opacity: 0.7; transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1); }
 }
 
-/* СВЕТЛИНЕНА АНИМАЦИЯ */
-.mockup::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:linear-gradient(120deg,transparent,#0af2,transparent);
-    animation:scan 2.8s linear infinite;
-    pointer-events:none;
+/* ЦЕНТЪР - СКОРОСТ */
+.center {
+    text-align: center;
+    padding: 10px 0;
+}
+.speed {
+    font-size: 96px;
+    font-weight: 800;
+    line-height: 1;
+    transition: 0.2s;
+}
+.unit {
+    color: #777;
+    font-size: 14px;
+    margin-top: -8px;
 }
 
-@keyframes scan{
-    0%{transform:translateX(-100%)}
-    100%{transform:translateX(100%)}
+/* ДОЛЕН ПАНЕЛ С МЕТРИКИ */
+.panel {
+    margin: 12px;
+    padding: 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.03);
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+.panel div {
+    flex: 1;
+}
+.panel span {
+    font-size: 11px;
+    color: #888;
+}
+.panel strong {
+    font-size: 20px;
+    display: block;
+    margin-top: 4px;
 }
 
-/* HUD КОНТЕЙНЕР */
-.hud{
-    position:absolute;
-    inset:0;
-    padding:0.7rem;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    font-family:'Share Tech Mono', 'Courier New', monospace;
-    z-index:2;
+/* ГРАФИКА */
+canvas {
+    margin: 8px 12px;
+    width: calc(100% - 24px);
+    height: 110px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 16px;
 }
 
-/* Горен статус */
-.hud-top{
-    display:flex;
-    justify-content:space-between;
-    font-size:0.65rem;
-    font-weight:bold;
-    border-bottom:1px solid #0af3;
-    padding-bottom:0.3rem;
-    margin-bottom:0rem;
+/* БУТОНИ */
+.buttons {
+    display: flex;
+    gap: 10px;
+    padding: 12px;
+    margin-top: 4px;
+    margin-bottom: 12px;
+}
+.buttons a {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+.download {
+    background: #00e5ff;
+    color: #000;
+}
+.download:hover {
+    box-shadow: 0 0 16px #00e5ff;
+}
+.github {
+    border: 1px solid #00e5ff;
+    color: #00e5ff;
+    background: transparent;
+}
+.github:hover {
+    background: #00e5ff22;
 }
 
-.hud-top span:first-child{color:#0af; text-shadow:0 0 3px #0af;}
-.hud-top span:last-child{animation:pulse 1.2s infinite;}
-
-@keyframes pulse{
-    0%,100%{opacity:1}
-    50%{opacity:0.4}
-}
-
-/* ГЛАВЕНА СКОРОСТ */
-.hud-center{
-    text-align:center;
-    margin:0rem 0;
-}
-
-.hud-center .big-speed{
-    font-size:clamp(2.5rem, 8vw, 3.2rem);
-    font-weight:900;
-    line-height:1;
-    text-shadow:0 0 8px #0af,0 0 16px #0af;
-    letter-spacing:2px;
-}
-
-.hud-center .units{
-    font-size:0.8rem;
-    color:#8af;
-}
-
-/* Долен статус */
-.hud-bottom{
-    font-size:0.6rem;
-    display:flex;
-    justify-content:space-between;
-    border-top:1px solid #0af3;
-    padding-top:0.3rem;
-    margin-bottom:0rem;
-}
-
-/* СТРАНИЧНИ ТЕКСТОВЕ */
-.hud-side{
-    position:absolute;
-    top:50%;
-    transform:translateY(-50%);
-    font-size:0.55rem;
-    line-height:1.5;
-    opacity:0.7;
-    font-weight:bold;
-}
-
-.hud-left{left:5px; text-align:left;}
-.hud-right{right:5px; text-align:right;}
-
-/* БАРОВЕ ГРАФИКА */
-.hud-bars{
-    position:absolute;
-    top:8px;
-    left:50%;
-    transform:translateX(-50%);
-    display:flex;
-    gap:3px;
-}
-
-.hud-bars span{
-    width:4px;
-    height:4px;
-    background:#0af;
-    border-radius:2px;
-    animation:blink 1s infinite alternate;
-}
-
-.hud-bars span:nth-child(2){animation-delay:0.2s}
-.hud-bars span:nth-child(3){animation-delay:0.4s}
-.hud-bars span:nth-child(4){animation-delay:0.6s}
-
-@keyframes blink{
-    0%{opacity:0.2}
-    100%{opacity:1}
-}
-
-/* БУТОНИТЕ – ПРЕМЕСТЕНИ ИЗВЪН MOCKUP */
-.buttons-outside{
-    display:flex;
-    gap:1rem;
-    justify-content:center;
-    margin-top:1.5rem;
-    margin-bottom:1.5rem;
-}
-
-.btn{
-    font-size:0.9rem;
-    padding:0.6rem 1.6rem;
-    border-radius:60px;
-    font-weight:bold;
-    text-decoration:none;
-    transition:0.2s;
-    display:inline-block;
-    text-align:center;
-}
-
-.btn-primary{
-    background:#0af;
-    color:#000;
-    box-shadow:0 0 10px #0af;
-}
-.btn-primary:hover{
-    transform:scale(1.02);
-    background:#2cf;
-    box-shadow:0 0 20px #0af;
-}
-
-.btn-secondary{
-    border:1px solid #0af;
-    color:#0af;
-    background:rgba(0,170,255,0.05);
-}
-.btn-secondary:hover{
-    background:#0af2;
-    box-shadow:0 0 15px #0af;
-}
-
-/* КАРТИ */
-.features{
-    margin-top:2.5rem;
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:0.7rem;
-}
-
-.card{
-    background:#0af1;
-    backdrop-filter:blur(4px);
-    padding:0.4rem 1.2rem;
-    border-radius:60px;
-    font-weight:bold;
-    font-size:0.8rem;
-    border:1px solid #0af3;
-}
-
-/* ХАРДУЕР */
-.hardware{
-    margin-top:2.5rem;
-    text-align:center;
-}
-
-.hardware-grid{
-    display:flex;
-    gap:0.7rem;
-    justify-content:center;
-    flex-wrap:wrap;
-}
-
-.hardware-item{
-    background:#0af1;
-    padding:0.3rem 1rem;
-    border-radius:40px;
-    font-size:0.75rem;
-}
-
-/* ФУТЪР */
-.footer{
-    margin-top:3rem;
-    margin-bottom:1rem;
-    text-align:center;
-    font-size:0.65rem;
-    opacity:0.5;
-}
-
-/* МЕДИЙНИ ЗАЯВКИ */
-@media (max-width: 550px) {
-    .container{padding:0.8rem;}
-    .hero h1{font-size:1.8rem;}
-    .card{font-size:0.7rem; padding:0.3rem 0.8rem;}
-    .hardware-item{font-size:0.65rem;}
-    .hud-side{font-size:0.45rem;}
-    .hud-left{left:3px;}
-    .hud-right{right:3px;}
-    .btn{font-size:0.8rem; padding:0.4rem 1.2rem;}
+.reset-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #00e5ff;
+    color: #000;
+    padding: 6px 20px;
+    border-radius: 40px;
+    font-size: 12px;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 100;
 }
 </style>
 </head>
 
 <body>
-<div class="container">
-
-<section class="hero">
-<h1>RC SPEEDOMETER</h1>
-<p>next‑gen telemetry for adrenaline</p>
-
-<div class="mockup">
-    <div class="hud">
-        <div class="hud-top">
-            <span>🛰️ GPS FIX</span>
-            <span id="trackingLabel">🔴 LIVE</span>
+<div style="display: flex; flex-direction: column; align-items: center;">
+    <div class="phone">
+        <div class="top">
+            <div class="bars" id="bars"></div>
+            <div class="rec" id="recBtn">REC</div>
         </div>
 
-        <div class="hud-center">
-            <div class="big-speed" id="speedValue">0</div>
-            <div class="units">km/h</div>
+        <div class="center">
+            <div class="speed" id="speedDisplay">0.0</div>
+            <div class="unit">km/h</div>
         </div>
 
-        <div class="hud-bottom">
-            <span id="satValue">🛸 SAT: 07</span>
-            <span id="maxValue">🏁 MAX: 0</span>
+        <div class="panel">
+            <div><span>MAX</span><strong id="maxVal">0.0</strong></div>
+            <div><span>0-60</span><strong id="t60Val">-</strong></div>
+            <div><span>DIST</span><strong id="distVal">0.0</strong></div>
+            <div><span>0-100</span><strong id="t100Val">-</strong></div>
+        </div>
+
+        <canvas id="speedCanvas" width="280" height="110"></canvas>
+
+        <div class="buttons">
+            <a href="Android/app-debug.apk" class="download">⬇️ APK</a>
+            <a href="https://github.com/Pazuzo/RCSpeedo" class="github">GitHub</a>
         </div>
     </div>
-
-    <div class="hud-side hud-left">
-        SPD<br>AVG<br>G-FORCE
-    </div>
-
-    <div class="hud-side hud-right">
-        LOCK<br>RANGE<br>MODE
-    </div>
-
-    <div class="hud-bars">
-        <span></span><span></span><span></span><span></span>
-    </div>
-</div>
-
-<!-- БУТОНИТЕ СА ТУК – ИЗВЪН mockup-а -->
-<div class="buttons-outside">
-    <a href="Android/app-debug.apk" class="btn btn-primary">⬇️ СВАЛИ APK</a>
-    <a href="https://github.com/Pazuzo/RCSpeedo" class="btn btn-secondary" target="_blank">🖥️ GitHub</a>
-</div>
-</section>
-
-<!-- ФУНКЦИОНАЛНОСТИ -->
-<section class="features">
-<div class="card">🛰️ REAL GPS</div>
-<div class="card">⚡ 0‑60 / 0‑100</div>
-<div class="card">📈 LIVE GRAPH</div>
-<div class="card">🎮 REC MODE</div>
-</section>
-
-<section class="hardware">
-<div class="hardware-grid">
-<div class="hardware-item">✅ XIAO ESP32‑S3</div>
-<div class="hardware-item">✅ Flyfish M10 GPS</div>
-<div class="hardware-item">✅ WebSocket</div>
-</div>
-</section>
-
-<div class="footer">
-CYBERPUNK TELEMETRY • FULLY OPEN SOURCE
-</div>
-
+    <div class="reset-toast" id="resetToast">⟳ RESET</div>
 </div>
 
 <script>
-// --- ДЕМО СКРИПТ ЗА ВИЗУАЛИЗАЦИЯ ---
-let speedElement = document.getElementById('speedValue');
-let satElement = document.getElementById('satValue');
-let maxElement = document.getElementById('maxValue');
-let trackingLabel = document.getElementById('trackingLabel');
-
-let currentSpeed = 0;
-let direction = 1;
-let currentMax = 0;
-
-function updateHUD(speed, maxSpeed) {
-    speedElement.innerText = Math.floor(speed);
-    maxElement.innerText = `🏁 MAX: ${Math.floor(maxSpeed)}`;
-    let sats = 7 + Math.floor(Math.random() * 3);
-    satElement.innerText = `🛸 SAT: ${sats.toString().padStart(2, '0')}`;
-}
-
-setInterval(() => {
-    let change = Math.random() * 8 + 3;
-    currentSpeed += direction * change;
+    // ---------- РЕАЛИСТИЧЕН АЛГОРИТЪМ ЗА СКОРОСТ ----------
+    // Имитира ускорение/забавяне на RC кола
+    let speed = 0;
+    let throttle = 0;        // "газ" (0 до 1)
+    let brake = 0;           // "спирачка" (0 до 1)
+    let maxSpeedLimit = 0;   // текущо ограничение (за симулация)
     
-    if (currentSpeed > 118) {
-        currentSpeed = 118;
-        direction = -1;
-    }
-    if (currentSpeed < 15) {
-        currentSpeed = 15;
-        direction = 1;
-    }
-    
-    if (currentSpeed > currentMax) {
-        currentMax = currentSpeed;
-    }
-    
-    updateHUD(currentSpeed, currentMax);
-}, 130);
+    let maxSpeed = 0;
+    let t60 = 0;
+    let t100 = 0;
+    let distance = 0;
+    let sats = 7;
+    let recording = false;
+    let speedHistory = [];
 
-setInterval(() => {
-    trackingLabel.style.opacity = (trackingLabel.style.opacity == '0.4') ? '1' : '0.4';
-}, 800);
+    let raceStarted = false;
+    let raceStartTime = 0;
+    let done60 = false, done100 = false;
+
+    // DOM елементи
+    const speedDisplay = document.getElementById('speedDisplay');
+    const maxValSpan = document.getElementById('maxVal');
+    const distValSpan = document.getElementById('distVal');
+    const t60Span = document.getElementById('t60Val');
+    const t100Span = document.getElementById('t100Val');
+    const recBtn = document.getElementById('recBtn');
+    const resetToast = document.getElementById('resetToast');
+    const barsDiv = document.getElementById('bars');
+    const canvas = document.getElementById('speedCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // ---------- ПОМОЩНИ ФУНКЦИИ ----------
+    function getSpeedColor(s) {
+        if (s < 30) return '#2196F3';
+        if (s < 70) return '#00E5FF';
+        if (s < 120) return '#9C27B0';
+        return '#FF3D00';
+    }
+
+    function updateSatelliteUI() {
+        let count = Math.min(5, Math.floor(sats / 2));
+        let html = '';
+        for (let i = 0; i < 5; i++) {
+            let height = 6 + i * 4;
+            let opacity = i < count ? 1 : 0.2;
+            html += `<span style="height: ${height}px; opacity: ${opacity}; background: ${getSpeedColor(speed)};"></span>`;
+        }
+        barsDiv.innerHTML = html;
+    }
+
+    function drawGraph() {
+        if (!ctx) return;
+        const w = canvas.width = 280;
+        const h = canvas.height = 110;
+        ctx.clearRect(0, 0, w, h);
+        if (speedHistory.length < 2) return;
+
+        const maxSp = Math.max(...speedHistory, 5);
+        const stepX = w / (speedHistory.length - 1);
+        ctx.beginPath();
+        for (let i = 0; i < speedHistory.length; i++) {
+            let x = i * stepX;
+            let y = h - (speedHistory[i] / maxSp) * h;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = getSpeedColor(speed);
+        ctx.lineWidth = 2.5;
+        ctx.shadowBlur = 5;
+        ctx.shadowColor = getSpeedColor(speed);
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        if (speedHistory.length) {
+            let lastX = (speedHistory.length - 1) * stepX;
+            let lastY = h - (speedHistory[speedHistory.length - 1] / maxSp) * h;
+            ctx.beginPath();
+            ctx.arc(lastX, lastY, 5, 0, Math.PI * 2);
+            ctx.fillStyle = getSpeedColor(speed);
+            ctx.fill();
+        }
+    }
+
+    function refreshUI() {
+        const color = getSpeedColor(speed);
+        speedDisplay.style.color = color;
+        speedDisplay.style.textShadow = `0 0 20px ${color}`;
+        speedDisplay.innerText = speed.toFixed(1);
+        maxValSpan.innerText = maxSpeed.toFixed(1);
+        maxValSpan.style.color = color;
+        distValSpan.innerText = distance.toFixed(1);
+        t60Span.innerText = t60 > 0 ? t60.toFixed(2) : '-';
+        t100Span.innerText = t100 > 0 ? t100.toFixed(2) : '-';
+        updateSatelliteUI();
+        drawGraph();
+    }
+
+    function resetMetrics() {
+        maxSpeed = 0;
+        t60 = 0;
+        t100 = 0;
+        distance = 0;
+        raceStarted = false;
+        done60 = false;
+        done100 = false;
+        raceStartTime = 0;
+        speedHistory = [];
+        refreshUI();
+        resetToast.style.opacity = '1';
+        setTimeout(() => { resetToast.style.opacity = '0'; }, 800);
+    }
+
+    function toggleRecording() {
+        recording = !recording;
+        if (recording) {
+            recBtn.classList.add('recording');
+            recBtn.innerText = '●';
+        } else {
+            recBtn.classList.remove('recording');
+            recBtn.innerText = 'REC';
+        }
+    }
+
+    // ---------- РЕАЛИСТИЧНА СИМУЛАЦИЯ НА ДВИЖЕНИЕ ----------
+    let lastTimestamp = 0;
+    function updateRealisticTelemetry(nowMs) {
+        if (lastTimestamp === 0) {
+            lastTimestamp = nowMs;
+            return;
+        }
+        let dt = Math.min(0.1, (nowMs - lastTimestamp) / 1000);
+        if (dt <= 0) return;
+        lastTimestamp = nowMs;
+
+        // Случайна промяна на газ/спирачка (имитира RC управление)
+        if (Math.random() < 0.05) {
+            throttle = Math.random() * 0.8 + 0.2;  // 0.2–1.0 газ
+            brake = 0;
+        }
+        if (Math.random() < 0.03 && speed > 10) {
+            brake = Math.random() * 0.5 + 0.3;    // 0.3–0.8 спирачка
+            throttle = 0;
+        }
+        if (Math.random() < 0.02 && speed < 5) {
+            throttle = 0.2 + Math.random() * 0.3;
+            brake = 0;
+        }
+
+        // Проста физика: ускорението зависи от газ/спирачка
+        let acceleration = throttle * 35 - brake * 25;
+        speed += acceleration * dt;
+        
+        // Ограничения
+        let currentMax = 70 + Math.random() * 60;  // между 70 и 130 км/ч
+        if (speed < 0) speed = 0;
+        if (speed > currentMax) speed = currentMax;
+
+        // Лек шум (реалистично трептене)
+        speed += (Math.random() - 0.5) * 1.5 * dt;
+        if (speed < 0) speed = 0;
+
+        // RACE логика (0-60, 0-100)
+        if (!raceStarted && speed > 2) {
+            raceStarted = true;
+            raceStartTime = nowMs / 1000;
+            done60 = false;
+            done100 = false;
+        }
+        if (raceStarted) {
+            let nowSec = nowMs / 1000;
+            distance += (speed / 3.6) * dt;
+            if (!done60 && speed >= 60) {
+                t60 = nowSec - raceStartTime;
+                done60 = true;
+            }
+            if (!done100 && speed >= 100) {
+                t100 = nowSec - raceStartTime;
+                done100 = true;
+            }
+            if (speed < 1 && distance > 0) {
+                raceStarted = false;
+            }
+        }
+        if (speed > maxSpeed) maxSpeed = speed;
+
+        // Симулация на сателити
+        let newSats = 5 + Math.floor(Math.random() * 7);
+        sats = Math.min(12, newSats);
+
+        // Запис в историята за графиката
+        speedHistory.push(speed);
+        if (speedHistory.length > 120) speedHistory.shift();
+
+        refreshUI();
+    }
+
+    // Анимационен цикъл (60fps)
+    let lastFrameTime = 0;
+    function animateLoop(now) {
+        requestAnimationFrame(animateLoop);
+        if (now - lastFrameTime < 50) return;  // ~20Hz, достатъчно за UI
+        lastFrameTime = now;
+        updateRealisticTelemetry(now);
+    }
+
+    // ---------- RESET ПЛЪЗГАНЕ ----------
+    let touchStartX = 0;
+    document.body.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+    document.body.addEventListener('touchend', (e) => {
+        let diff = e.changedTouches[0].clientX - touchStartX;
+        if (diff > 80) resetMetrics();
+        touchStartX = 0;
+    });
+
+    // За десктоп мишка
+    let mouseStartX = 0;
+    document.body.addEventListener('mousedown', (e) => { mouseStartX = e.clientX; });
+    document.body.addEventListener('mouseup', (e) => {
+        if (mouseStartX && (e.clientX - mouseStartX) > 80) resetMetrics();
+        mouseStartX = 0;
+    });
+
+    // Старт
+    recBtn.addEventListener('click', toggleRecording);
+    requestAnimationFrame(animateLoop);
 </script>
-
 </body>
 </html>
