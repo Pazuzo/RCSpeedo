@@ -21,8 +21,8 @@
 3. Connect to WiFi `RCSpeedo`  
 4. Start driving!
 
-## Video demo
-[линк към YouTube]
+## Download Android APK
+[Свали APK](Android/app-debug.apk)
 
 ## License
 MIT © pazuzo
