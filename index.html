@@ -2,14 +2,14 @@
 <html lang="bg">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>RC Speedometer</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 
 body{
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background:#010105;
     color:#d9faff;
     overflow-x:hidden;
@@ -27,16 +27,16 @@ body::before{
     z-index:-2;
 }
 
-.container{max-width:1150px;margin:auto;padding:1.5rem}
+.container{max-width:1200px;margin:0 auto;padding:1.5rem}
 
 /* HERO */
 .hero{
     text-align:center;
-    padding:3rem 1rem 2rem;
+    padding:1rem 1rem 0rem;
 }
 
 .hero h1{
-    font-size:3.5rem;
+    font-size:clamp(2rem, 7vw, 3.2rem);
     font-weight:900;
     letter-spacing:-1px;
     background:linear-gradient(135deg, #00e5ff, #a020f0);
@@ -47,22 +47,23 @@ body::before{
 }
 
 .hero p{
-    margin-top:0.8rem;
+    margin-top:0.2rem;
     color:#8aa;
-    font-size:1rem;
-    letter-spacing:1px;
+    font-size:clamp(0.75rem, 4vw, 0.9rem);
 }
 
-/* MOCKUP */
+/* MOCKUP ТЕЛЕФОН */
 .mockup{
-    margin:2.5rem auto 0;
-    width:280px;height:540px;
-    border-radius:2.2rem;
+    margin:1.2rem auto 0;
+    width:min(80%, 280px);
+    max-width:280px;
+    aspect-ratio: 9 / 18;
+    border-radius:2rem;
     background:#03050b;
     border:1px solid #0af3;
     position:relative;
     overflow:hidden;
-    box-shadow:0 0 40px #0af2, inset 0 0 20px #0af1;
+    box-shadow:0 0 30px #0af2, inset 0 0 15px #0af1;
 }
 
 /* СВЕТЛИНЕНА АНИМАЦИЯ */
@@ -84,11 +85,11 @@ body::before{
 .hud{
     position:absolute;
     inset:0;
-    padding:1rem;
+    padding:0.7rem;
     display:flex;
     flex-direction:column;
     justify-content:space-between;
-    font-family:'Share Tech Mono', monospace;
+    font-family:'Share Tech Mono', 'Courier New', monospace;
     z-index:2;
 }
 
@@ -96,10 +97,11 @@ body::before{
 .hud-top{
     display:flex;
     justify-content:space-between;
-    font-size:0.75rem;
+    font-size:0.65rem;
     font-weight:bold;
     border-bottom:1px solid #0af3;
-    padding-bottom:0.5rem;
+    padding-bottom:0.3rem;
+    margin-bottom:0rem;
 }
 
 .hud-top span:first-child{color:#0af; text-shadow:0 0 3px #0af;}
@@ -113,29 +115,30 @@ body::before{
 /* ГЛАВЕНА СКОРОСТ */
 .hud-center{
     text-align:center;
-    margin:2rem 0;
+    margin:0rem 0;
 }
 
 .hud-center .big-speed{
-    font-size:3.3rem;
+    font-size:clamp(2.5rem, 8vw, 3.2rem);
     font-weight:900;
     line-height:1;
-    text-shadow:0 0 10px #0af,0 0 20px #0af;
+    text-shadow:0 0 8px #0af,0 0 16px #0af;
     letter-spacing:2px;
 }
 
 .hud-center .units{
-    font-size:1rem;
+    font-size:0.8rem;
     color:#8af;
 }
 
 /* Долен статус */
 .hud-bottom{
-    font-size:0.7rem;
+    font-size:0.6rem;
     display:flex;
     justify-content:space-between;
     border-top:1px solid #0af3;
-    padding-top:0.5rem;
+    padding-top:0.3rem;
+    margin-bottom:0rem;
 }
 
 /* СТРАНИЧНИ ТЕКСТОВЕ */
@@ -143,27 +146,28 @@ body::before{
     position:absolute;
     top:50%;
     transform:translateY(-50%);
-    font-size:0.7rem;
-    line-height:1.6;
+    font-size:0.55rem;
+    line-height:1.5;
     opacity:0.7;
+    font-weight:bold;
 }
 
-.hud-left{left:8px; text-align:left;}
-.hud-right{right:8px; text-align:right;}
+.hud-left{left:5px; text-align:left;}
+.hud-right{right:5px; text-align:right;}
 
 /* БАРОВЕ ГРАФИКА */
 .hud-bars{
     position:absolute;
-    top:12px;
+    top:8px;
     left:50%;
     transform:translateX(-50%);
     display:flex;
-    gap:4px;
+    gap:3px;
 }
 
 .hud-bars span{
-    width:6px;
-    height:6px;
+    width:4px;
+    height:4px;
     background:#0af;
     border-radius:2px;
     animation:blink 1s infinite alternate;
@@ -178,90 +182,105 @@ body::before{
     100%{opacity:1}
 }
 
-/* БУТОНИ */
-.screen-buttons{
-    position:absolute;
-    bottom:20px;
-    left:50%;
-    transform:translateX(-50%);
+/* БУТОНИТЕ – ПРЕМЕСТЕНИ ИЗВЪН MOCKUP */
+.buttons-outside{
     display:flex;
-    gap:0.8rem;
+    gap:1rem;
+    justify-content:center;
+    margin-top:1.5rem;
+    margin-bottom:1.5rem;
 }
 
-.screen-buttons a{
-    font-size:0.75rem;
-    padding:0.5rem 1.1rem;
-    border-radius:40px;
-    backdrop-filter:blur(4px);
-    transition:0.2s;
-    font-weight:600;
+.btn{
+    font-size:0.9rem;
+    padding:0.6rem 1.6rem;
+    border-radius:60px;
+    font-weight:bold;
     text-decoration:none;
+    transition:0.2s;
+    display:inline-block;
+    text-align:center;
 }
 
 .btn-primary{
     background:#0af;
     color:#000;
-    box-shadow:0 0 12px #0af;
+    box-shadow:0 0 10px #0af;
 }
 .btn-primary:hover{
-    transform:scale(1.05);
+    transform:scale(1.02);
     background:#2cf;
+    box-shadow:0 0 20px #0af;
 }
 
 .btn-secondary{
     border:1px solid #0af;
     color:#0af;
+    background:rgba(0,170,255,0.05);
 }
 .btn-secondary:hover{
-    background:#0af1;
-    box-shadow:0 0 20px #0af;
+    background:#0af2;
+    box-shadow:0 0 15px #0af;
 }
 
 /* КАРТИ */
 .features{
-    margin-top:5rem;
+    margin-top:2.5rem;
     display:flex;
     flex-wrap:wrap;
     justify-content:center;
-    gap:1rem;
+    gap:0.7rem;
 }
 
 .card{
     background:#0af1;
-    backdrop-filter:blur(8px);
-    padding:0.8rem 1.8rem;
+    backdrop-filter:blur(4px);
+    padding:0.4rem 1.2rem;
     border-radius:60px;
     font-weight:bold;
-    font-size:0.9rem;
+    font-size:0.8rem;
     border:1px solid #0af3;
 }
 
 /* ХАРДУЕР */
 .hardware{
-    margin-top:4rem;
+    margin-top:2.5rem;
     text-align:center;
 }
 
 .hardware-grid{
     display:flex;
-    gap:1rem;
+    gap:0.7rem;
     justify-content:center;
     flex-wrap:wrap;
 }
 
 .hardware-item{
     background:#0af1;
-    padding:0.5rem 1.5rem;
+    padding:0.3rem 1rem;
     border-radius:40px;
-    font-size:0.85rem;
+    font-size:0.75rem;
 }
 
 /* ФУТЪР */
 .footer{
-    margin-top:5rem;
+    margin-top:3rem;
+    margin-bottom:1rem;
     text-align:center;
-    font-size:0.75rem;
+    font-size:0.65rem;
     opacity:0.5;
+}
+
+/* МЕДИЙНИ ЗАЯВКИ */
+@media (max-width: 550px) {
+    .container{padding:0.8rem;}
+    .hero h1{font-size:1.8rem;}
+    .card{font-size:0.7rem; padding:0.3rem 0.8rem;}
+    .hardware-item{font-size:0.65rem;}
+    .hud-side{font-size:0.45rem;}
+    .hud-left{left:3px;}
+    .hud-right{right:3px;}
+    .btn{font-size:0.8rem; padding:0.4rem 1.2rem;}
 }
 </style>
 </head>
@@ -286,31 +305,28 @@ body::before{
         </div>
 
         <div class="hud-bottom">
-            <span>📡 SAT: 07</span>
-            <span>⚡ MAX: 0</span>
+            <span id="satValue">🛸 SAT: 07</span>
+            <span id="maxValue">🏁 MAX: 0</span>
         </div>
     </div>
 
     <div class="hud-side hud-left">
-        SPD<br>
-        AVG<br>
-        G-FORCE
+        SPD<br>AVG<br>G-FORCE
     </div>
 
     <div class="hud-side hud-right">
-        LOCK<br>
-        RANGE<br>
-        MODE
+        LOCK<br>RANGE<br>MODE
     </div>
 
     <div class="hud-bars">
         <span></span><span></span><span></span><span></span>
     </div>
+</div>
 
-    <div class="screen-buttons">
-        <a href="RCSpeedo.apk" class="btn-primary">⬇️ APK</a>
-        <a href="https://github.com/Pazuzo/RCSpeedo" class="btn-secondary">🖥️ CODE</a>
-    </div>
+<!-- БУТОНИТЕ СА ТУК – ИЗВЪН mockup-а -->
+<div class="buttons-outside">
+    <a href="Android/app-debug.apk" class="btn btn-primary">⬇️ СВАЛИ APK</a>
+    <a href="https://github.com/Pazuzo/RCSpeedo" class="btn btn-secondary" target="_blank">🖥️ GitHub</a>
 </div>
 </section>
 
@@ -337,27 +353,43 @@ CYBERPUNK TELEMETRY • FULLY OPEN SOURCE
 </div>
 
 <script>
+// --- ДЕМО СКРИПТ ЗА ВИЗУАЛИЗАЦИЯ ---
 let speedElement = document.getElementById('speedValue');
+let satElement = document.getElementById('satValue');
+let maxElement = document.getElementById('maxValue');
 let trackingLabel = document.getElementById('trackingLabel');
 
-let fakeSpeed = 0;
+let currentSpeed = 0;
 let direction = 1;
+let currentMax = 0;
+
+function updateHUD(speed, maxSpeed) {
+    speedElement.innerText = Math.floor(speed);
+    maxElement.innerText = `🏁 MAX: ${Math.floor(maxSpeed)}`;
+    let sats = 7 + Math.floor(Math.random() * 3);
+    satElement.innerText = `🛸 SAT: ${sats.toString().padStart(2, '0')}`;
+}
 
 setInterval(() => {
-    fakeSpeed += direction * (Math.random() * 6 + 2);
-    if (fakeSpeed > 117) direction = -1;
-    if (fakeSpeed < 12) direction = 1;
-
-    let displaySpeed = Math.floor(fakeSpeed);
-    speedElement.innerText = displaySpeed;
-
-    // добавяме максимална стойност (demo)
-    let maxSpan = document.querySelector('.hud-bottom span:last-child');
-    if (displaySpeed > parseInt(maxSpan.innerText.split(':')[1] || 0))
-        maxSpan.innerText = `🏁 MAX: ${displaySpeed}`;
+    let change = Math.random() * 8 + 3;
+    currentSpeed += direction * change;
+    
+    if (currentSpeed > 118) {
+        currentSpeed = 118;
+        direction = -1;
+    }
+    if (currentSpeed < 15) {
+        currentSpeed = 15;
+        direction = 1;
+    }
+    
+    if (currentSpeed > currentMax) {
+        currentMax = currentSpeed;
+    }
+    
+    updateHUD(currentSpeed, currentMax);
 }, 130);
 
-// Мигащ "LIVE" индикатор
 setInterval(() => {
     trackingLabel.style.opacity = (trackingLabel.style.opacity == '0.4') ? '1' : '0.4';
 }, 800);
