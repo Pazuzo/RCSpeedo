@@ -9,124 +9,70 @@
 *{margin:0;padding:0;box-sizing:border-box}
 
 body{
-    font-family: Inter, system-ui, sans-serif;
-    background:#02030a;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background:#010105;
     color:#d9faff;
     overflow-x:hidden;
 }
 
-/* 🌌 GRID + PARTICLES FEEL */
+/* КИБЕР ГРИД */
 body::before{
     content:"";
     position:fixed;
     inset:0;
     background:
-        linear-gradient(rgba(0,229,255,0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,229,255,0.05) 1px, transparent 1px);
-    background-size:40px 40px;
+        linear-gradient(rgba(0,229,255,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.06) 1px, transparent 1px);
+    background-size:48px 48px;
     z-index:-2;
 }
 
-body::after{
-    content:"";
-    position:fixed;
-    width:900px;height:900px;
-    background:radial-gradient(circle,#00e5ff22,transparent);
-    top:-300px;left:-300px;
-    filter:blur(140px);
-    z-index:-1;
-}
-
-.container{max-width:1200px;margin:auto;padding:2rem}
+.container{max-width:1150px;margin:auto;padding:1.5rem}
 
 /* HERO */
 .hero{
     text-align:center;
-    padding:6rem 1rem;
-    position:relative;
+    padding:3rem 1rem 2rem;
 }
 
 .hero h1{
-    font-size:4.5rem;
+    font-size:3.5rem;
     font-weight:900;
-    letter-spacing:-0.02em;
-    color:#00e5ff;
-    text-shadow:
-        0 0 10px #00e5ff,
-        0 0 20px #00e5ff,
-        0 0 40px #00e5ff;
-    animation:pulseGlow 3s ease-in-out infinite;
-}
-
-@keyframes pulseGlow{
-    0%,100%{text-shadow:0 0 10px #00e5ff,0 0 20px #00e5ff}
-    50%{text-shadow:0 0 20px #00e5ff,0 0 60px #00e5ff}
+    letter-spacing:-1px;
+    background:linear-gradient(135deg, #00e5ff, #a020f0);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    text-shadow:0 0 20px #0af2;
 }
 
 .hero p{
-    margin-top:1.5rem;
+    margin-top:0.8rem;
     color:#8aa;
-    font-size:1.2rem;
+    font-size:1rem;
+    letter-spacing:1px;
 }
 
-.btns{
-    margin-top:2.5rem;
-    display:flex;
-    justify-content:center;
-    gap:1rem;
-}
-
-.btn{
-    padding:1rem 2.2rem;
-    border-radius:999px;
-    text-decoration:none;
-    font-weight:700;
-    transition:0.3s;
-}
-
-.btn-primary{
-    background:#00e5ff;
-    color:#000;
-    box-shadow:0 0 20px #00e5ff,0 0 60px #00e5ff55;
-}
-
-.btn-primary:hover{
-    transform:scale(1.1);
-    box-shadow:0 0 40px #00e5ff,0 0 100px #00e5ff;
-}
-
-.btn-secondary{
-    border:1px solid #00e5ff55;
-    color:#00e5ff;
-}
-
-.btn-secondary:hover{
-    background:#00e5ff11;
-}
-
-/* HOLOGRAM MOCKUP */
+/* MOCKUP */
 .mockup{
-    margin:5rem auto 0;
-    width:260px;height:520px;
-    border-radius:2rem;
-    background:linear-gradient(145deg,#03040a,#111);
-    border:1px solid #00e5ff33;
-    box-shadow:
-        0 0 40px #00e5ff33,
-        inset 0 0 20px #00e5ff22;
-    display:flex;align-items:center;justify-content:center;
-    font-size:3rem;
+    margin:2.5rem auto 0;
+    width:280px;height:540px;
+    border-radius:2.2rem;
+    background:#03050b;
+    border:1px solid #0af3;
     position:relative;
-    animation:float 6s ease-in-out infinite;
+    overflow:hidden;
+    box-shadow:0 0 40px #0af2, inset 0 0 20px #0af1;
 }
 
+/* СВЕТЛИНЕНА АНИМАЦИЯ */
 .mockup::after{
     content:"";
     position:absolute;
     inset:0;
-    border-radius:2rem;
-    background:linear-gradient(120deg,transparent,#00e5ff33,transparent);
-    animation:scan 3s linear infinite;
+    background:linear-gradient(120deg,transparent,#0af2,transparent);
+    animation:scan 2.8s linear infinite;
+    pointer-events:none;
 }
 
 @keyframes scan{
@@ -134,97 +80,188 @@ body::after{
     100%{transform:translateX(100%)}
 }
 
-@keyframes float{
-    0%,100%{transform:translateY(0)}
-    50%{transform:translateY(-25px)}
-}
-
-/* FEATURES */
-.features{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-    gap:2rem;
-    margin-top:6rem;
-}
-
-.card{
-    padding:2rem;
-    border-radius:1.5rem;
-    background:rgba(0,229,255,0.03);
-    border:1px solid rgba(0,229,255,0.1);
-    position:relative;
-    overflow:hidden;
-    transition:0.3s;
-}
-
-.card::after{
-    content:"";
+/* HUD КОНТЕЙНЕР */
+.hud{
     position:absolute;
     inset:0;
-    border:1px solid transparent;
-    border-radius:1.5rem;
-    box-shadow:0 0 30px #00e5ff33;
-    opacity:0;
-    transition:0.3s;
+    padding:1rem;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    font-family:'Share Tech Mono', monospace;
+    z-index:2;
 }
 
-.card:hover::after{opacity:1}
-
-.card:hover{
-    transform:translateY(-12px) scale(1.03);
+/* Горен статус */
+.hud-top{
+    display:flex;
+    justify-content:space-between;
+    font-size:0.75rem;
+    font-weight:bold;
+    border-bottom:1px solid #0af3;
+    padding-bottom:0.5rem;
 }
 
-.card h3{
-    color:#00e5ff;
-    margin-bottom:0.6rem;
+.hud-top span:first-child{color:#0af; text-shadow:0 0 3px #0af;}
+.hud-top span:last-child{animation:pulse 1.2s infinite;}
+
+@keyframes pulse{
+    0%,100%{opacity:1}
+    50%{opacity:0.4}
 }
 
-/* SECTION */
-.section{
-    margin-top:6rem;
-    padding:3rem;
-    border-radius:1.5rem;
-    background:rgba(0,229,255,0.02);
-    border:1px solid rgba(0,229,255,0.08);
-}
-
-.section h2{
+/* ГЛАВЕНА СКОРОСТ */
+.hud-center{
     text-align:center;
-    margin-bottom:2rem;
-    color:#00e5ff;
-    text-shadow:0 0 10px #00e5ff;
+    margin:2rem 0;
 }
 
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+.hud-center .big-speed{
+    font-size:3.3rem;
+    font-weight:900;
+    line-height:1;
+    text-shadow:0 0 10px #0af,0 0 20px #0af;
+    letter-spacing:2px;
+}
+
+.hud-center .units{
+    font-size:1rem;
+    color:#8af;
+}
+
+/* Долен статус */
+.hud-bottom{
+    font-size:0.7rem;
+    display:flex;
+    justify-content:space-between;
+    border-top:1px solid #0af3;
+    padding-top:0.5rem;
+}
+
+/* СТРАНИЧНИ ТЕКСТОВЕ */
+.hud-side{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:0.7rem;
+    line-height:1.6;
+    opacity:0.7;
+}
+
+.hud-left{left:8px; text-align:left;}
+.hud-right{right:8px; text-align:right;}
+
+/* БАРОВЕ ГРАФИКА */
+.hud-bars{
+    position:absolute;
+    top:12px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:4px;
+}
+
+.hud-bars span{
+    width:6px;
+    height:6px;
+    background:#0af;
+    border-radius:2px;
+    animation:blink 1s infinite alternate;
+}
+
+.hud-bars span:nth-child(2){animation-delay:0.2s}
+.hud-bars span:nth-child(3){animation-delay:0.4s}
+.hud-bars span:nth-child(4){animation-delay:0.6s}
+
+@keyframes blink{
+    0%{opacity:0.2}
+    100%{opacity:1}
+}
+
+/* БУТОНИ */
+.screen-buttons{
+    position:absolute;
+    bottom:20px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:0.8rem;
+}
+
+.screen-buttons a{
+    font-size:0.75rem;
+    padding:0.5rem 1.1rem;
+    border-radius:40px;
+    backdrop-filter:blur(4px);
+    transition:0.2s;
+    font-weight:600;
+    text-decoration:none;
+}
+
+.btn-primary{
+    background:#0af;
+    color:#000;
+    box-shadow:0 0 12px #0af;
+}
+.btn-primary:hover{
+    transform:scale(1.05);
+    background:#2cf;
+}
+
+.btn-secondary{
+    border:1px solid #0af;
+    color:#0af;
+}
+.btn-secondary:hover{
+    background:#0af1;
+    box-shadow:0 0 20px #0af;
+}
+
+/* КАРТИ */
+.features{
+    margin-top:5rem;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
     gap:1rem;
 }
 
-.box{
-    padding:1.3rem;
-    text-align:center;
-    border-radius:1rem;
-    background:rgba(0,229,255,0.04);
-    border:1px solid rgba(0,229,255,0.08);
-    transition:0.3s;
-}
-
-.box:hover{
-    transform:scale(1.08);
-    box-shadow:0 0 20px #00e5ff55;
-}
-
-/* FOOTER */
-.footer{
-    text-align:center;
-    margin-top:6rem;
-    color:#6aa;
+.card{
+    background:#0af1;
+    backdrop-filter:blur(8px);
+    padding:0.8rem 1.8rem;
+    border-radius:60px;
+    font-weight:bold;
     font-size:0.9rem;
+    border:1px solid #0af3;
 }
 
-@media(max-width:768px){
-.hero h1{font-size:3rem}
+/* ХАРДУЕР */
+.hardware{
+    margin-top:4rem;
+    text-align:center;
+}
+
+.hardware-grid{
+    display:flex;
+    gap:1rem;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.hardware-item{
+    background:#0af1;
+    padding:0.5rem 1.5rem;
+    border-radius:40px;
+    font-size:0.85rem;
+}
+
+/* ФУТЪР */
+.footer{
+    margin-top:5rem;
+    text-align:center;
+    font-size:0.75rem;
+    opacity:0.5;
 }
 </style>
 </head>
@@ -234,53 +271,97 @@ body::after{
 
 <section class="hero">
 <h1>RC SPEEDOMETER</h1>
-<p>Futuristic GPS tracking system engineered for extreme RC performance.</p>
-
-<div class="btns">
-<a href="RCSpeedo.apk" class="btn btn-primary">Download APK</a>
-<a href="https://github.com/Pazuzo/RCSpeedo" class="btn btn-secondary">GitHub</a>
-</div>
+<p>next‑gen telemetry for adrenaline</p>
 
 <div class="mockup">
-    <div style="width:80%;height:80%;border:1px solid #00e5ff33;border-radius:1rem;display:flex;align-items:center;justify-content:center;color:#00e5ff;opacity:0.7;font-size:0.9rem;">
-        UI PREVIEW
+    <div class="hud">
+        <div class="hud-top">
+            <span>🛰️ GPS FIX</span>
+            <span id="trackingLabel">🔴 LIVE</span>
+        </div>
+
+        <div class="hud-center">
+            <div class="big-speed" id="speedValue">0</div>
+            <div class="units">km/h</div>
+        </div>
+
+        <div class="hud-bottom">
+            <span>📡 SAT: 07</span>
+            <span>⚡ MAX: 0</span>
+        </div>
+    </div>
+
+    <div class="hud-side hud-left">
+        SPD<br>
+        AVG<br>
+        G-FORCE
+    </div>
+
+    <div class="hud-side hud-right">
+        LOCK<br>
+        RANGE<br>
+        MODE
+    </div>
+
+    <div class="hud-bars">
+        <span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="screen-buttons">
+        <a href="RCSpeedo.apk" class="btn-primary">⬇️ APK</a>
+        <a href="https://github.com/Pazuzo/RCSpeedo" class="btn-secondary">🖥️ CODE</a>
     </div>
 </div>
 </section>
 
+<!-- ФУНКЦИОНАЛНОСТИ -->
 <section class="features">
-<div class="card"><h3>Real-time Speed</h3><p>Ultra precise tracking</p></div>
-<div class="card"><h3>Acceleration</h3><p>Instant performance data</p></div>
-<div class="card"><h3>Live Graph</h3><p>Realtime analytics</p></div>
-<div class="card"><h3>Neon UI</h3><p>Cyber interface system</p></div>
-<div class="card"><h3>External GPS</h3><p>High accuracy module</p></div>
-<div class="card"><h3>Recording</h3><p>Data logging engine</p></div>
+<div class="card">🛰️ REAL GPS</div>
+<div class="card">⚡ 0‑60 / 0‑100</div>
+<div class="card">📈 LIVE GRAPH</div>
+<div class="card">🎮 REC MODE</div>
 </section>
 
-<section class="section">
-<h2>Hardware</h2>
-<div class="grid">
-<div class="box">ESP32S3+</div>
-<div class="box">Flyfish M10</div>
-<div class="box">3.3V - 5V</div>
-<div class="box">Silicone wires</div>
-</div>
-</section>
-
-<section class="section">
-<h2>System Flow</h2>
-<div class="grid">
-<div class="box">WiFi Node</div>
-<div class="box">Signal Processing</div>
-<div class="box">Data Stream</div>
-<div class="box">UI Rendering</div>
+<section class="hardware">
+<div class="hardware-grid">
+<div class="hardware-item">✅ XIAO ESP32‑S3</div>
+<div class="hardware-item">✅ Flyfish M10 GPS</div>
+<div class="hardware-item">✅ WebSocket</div>
 </div>
 </section>
 
 <div class="footer">
-RC Speedometer • Futuristic Open Source Interface
+CYBERPUNK TELEMETRY • FULLY OPEN SOURCE
 </div>
 
 </div>
+
+<script>
+let speedElement = document.getElementById('speedValue');
+let trackingLabel = document.getElementById('trackingLabel');
+
+let fakeSpeed = 0;
+let direction = 1;
+
+setInterval(() => {
+    fakeSpeed += direction * (Math.random() * 6 + 2);
+    if (fakeSpeed > 117) direction = -1;
+    if (fakeSpeed < 12) direction = 1;
+
+    let displaySpeed = Math.floor(fakeSpeed);
+    speedElement.innerText = displaySpeed;
+
+    // добавяме максимална стойност (demo)
+    let maxSpan = document.querySelector('.hud-bottom span:last-child');
+    if (displaySpeed > parseInt(maxSpan.innerText.split(':')[1] || 0))
+        maxSpan.innerText = `🏁 MAX: ${displaySpeed}`;
+}, 130);
+
+// Мигащ "LIVE" индикатор
+setInterval(() => {
+    trackingLabel.style.opacity = (trackingLabel.style.opacity == '0.4') ? '1' : '0.4';
+}, 800);
+</script>
+
 </body>
 </html>
